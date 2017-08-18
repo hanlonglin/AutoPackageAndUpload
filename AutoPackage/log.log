@@ -1,0 +1,29 @@
+2017-05-23 15:54:55   on file: C:/Users/hanlonglin/Desktop/自动打包_程序/package.json:
+  updateid changes: 
+                  1212 to 1213;
+  process changes:
+  files changes:
+                  LOG.sql added;
+------------------------------------------------------------------------------------------------------
+2017-05-23 14:22:20   on file: C:/Users/hanlonglin/Desktop/自动打包项目资源文件夹/package.json:
+  updateid changes: 
+                  1205 to 1206;
+  process changes:
+  files changes:
+                  外网内网传输文件.docx added;
+------------------------------------------------------------------------------------------------------
+2017-05-18 10:04:52   on file: C:/Users/hanlonglin/Desktop/自动打包项目资源文件夹/package.json:
+  updateid changes: 
+                  1220 to 1221;
+  process changes:
+  files changes:
+                  HashMyFiles.cfg added;
+                  Qt_5.7_msvc2015_64bit.lnk added;
+                  msvcp140.dll added;
+                  Qt5Core.dll added;
+                  libGLESV2.dll added;
+                  D3Dcompiler_47.dll added;
+                  Qt5Gui.dll added;
+                  Qt5Network.dll added;
+                  Qt5Widgets.dll added;
+------------------------------------------------------------------------------------------------------

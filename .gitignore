@@ -1,0 +1,9 @@
+/x64
+Win32
+Debug
+Release
+*.db
+*.opendb
+*.filters
+*.user
+*.suo
