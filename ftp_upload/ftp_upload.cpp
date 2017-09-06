@@ -202,7 +202,7 @@ void ftp_upload::startUploadSlot()
 
 	//向数据库插入数据
 	DatabaseHelp dbHelp(this);
-	dbHelp.insertData(packageInfo.updateid);
+	dbHelp.insertData(packageInfo.updateid,packageInfo.mainFilever);
 	
 
 	//写入log文件

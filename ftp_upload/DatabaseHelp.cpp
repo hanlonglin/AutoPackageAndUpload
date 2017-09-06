@@ -65,7 +65,7 @@ bool DatabaseHelp::closeDB()
 }
 
 /*≤Â»Î ˝æ›*/
-bool DatabaseHelp::insertData(QString updateid)
+bool DatabaseHelp::insertData(QString updateid,QString mainFilever)
 {
 	if (!connectDB())
 	{
@@ -76,7 +76,7 @@ bool DatabaseHelp::insertData(QString updateid)
 	//return false;
 
 	sQuery = (QSqlQuery)dbConn;
-	sQuery.prepare("insert into "+QString(DB_TABLE_NAME)+"("+QString(DB_TABLE_PARAM_PACKAGE)+","+QString(DB_TABLE_PARAM_INDATE)+","+QString(DB_TABLE_PARAM_CREATE_USER)+") values('"+updateid+"',getdate(),'AutoPackage')");
+	sQuery.prepare("insert into "+QString(DB_TABLE_NAME)+"("+QString(DB_TABLE_PARAM_PACKAGE)+","+QString(DB_TABLE_PARAM_INDATE)+","+QString(DB_TABLE_PARAM_CREATE_USER)+","+QString(DB_TABLE_PARAM_MAINVER)+") values('"+updateid+"',getdate(),'AutoPackage','"+mainFilever+"')");
 	bool ret = sQuery.exec();
 
 	if (ret)
