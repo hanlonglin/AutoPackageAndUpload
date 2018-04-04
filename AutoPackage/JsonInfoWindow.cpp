@@ -580,7 +580,7 @@ void JsonInfoWindow::saveAllSlot()
 	QJsonObject obj;
 	obj.insert("updateid", ui.lineEditUpdateid->text().trimmed().toInt() + 1);
 	updateid_save = ui.lineEditUpdateid->text().trimmed().toInt() + 1; //保存到updateid_save里
-	obj.insert("mainfilever", ui.lineEditMainFilever->text().trimmed());
+	//obj.insert("mainfilever", ui.lineEditMainFilever->text().trimmed());
 	mainfilever_save = ui.lineEditMainFilever->text().trimmed(); //保存到mainfilever_save里
 	QJsonArray processList_array;
 	for (int i = 0; i < ui.tableWidgetProcesslist->rowCount(); i++)
@@ -593,6 +593,7 @@ void JsonInfoWindow::saveAllSlot()
 	//QMessageBox::information(this, "rows", QString::number(ui.tableWidgetFiles->rowCount()));
 	int rows = ui.tableWidgetFiles->rowCount();
 	std::cout << "rows:" << rows << std::endl;
+	boolean isHaveMainfilever = false; //是否存在文件InternetCafeCharge.exe
 	for (int i = 0; i < ui.tableWidgetFiles->rowCount(); i++)
 	{
 		QJsonObject fileObj;
@@ -606,6 +607,15 @@ void JsonInfoWindow::saveAllSlot()
 		fileObj.insert("dir", ui.tableWidgetFiles->item(i, 7)->text());
 		fileObj.insert("protect", ui.tableWidgetFiles->item(i, 8)->text());
 		fileList_array.push_back(fileObj);
+
+		//mainfilever 设置InternetCafeCharge.exe文件的ver
+		if (ui.tableWidgetFiles->item(i, 0)->text()=="InternetCafeCharge.exe")
+		{
+			isHaveMainfilever = true;
+			mainfilever_save = ui.tableWidgetFiles->item(i, 1)->text();
+			obj.insert("mainfilever", mainfilever_save);
+		}
+
 		//保存到fileList_save里
 		FileStruct file;
 		file.name = ui.tableWidgetFiles->item(i, 0)->text();
@@ -620,6 +630,16 @@ void JsonInfoWindow::saveAllSlot()
 		fileList_save.push_back(file);
 	}
 	obj.insert("files", fileList_array);
+
+	if (!isHaveMainfilever) {
+		QMessageBox box;
+		box.setText("Can't find file InternetCafeCharge.exe，mainfilever is "+ mainfilever_save+",continue?");
+		box.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+		int code=box.exec();
+		if (code == QMessageBox::Cancel)
+			return;
+	}
+
 	QJsonDocument document;
 	document.setObject(obj);
 	QString saveResultStr = document.toJson();
@@ -755,15 +775,46 @@ void JsonInfoWindow::packageSlot()
 	QDir appDir(QCoreApplication::applicationDirPath());
 	if (!appDir.cdUp())
 	{
-		QMessageBox::information(this,"","cant't find build.bat");
+		QMessageBox::information(this, "", "cant't find build.bat");
 		return;
 	}
+	//*********************************************************************
+	//读取版本号  形式 ：1.4.0.2(1526)
+	QString versionName="";
+	QFile ChangeFile(appDir.absolutePath() +"/Change.txt");
+	if (!ChangeFile.open(QIODevice::ReadOnly))
+	{
+		QMessageBox::information(this,"","Change.txt open fail");
+	}
+	else {
+		QTextStream in(&ChangeFile);
+		int i = 0;
+		while (!in.atEnd())
+		{
+			versionName = in.readLine();
+			i++;
+			if (i == 2)
+			{
+				break;
+			}
+		}
+		versionName.replace("(","_");
+		versionName=versionName.mid(0, versionName.length() - 1);
+		versionName.prepend(" ");
+		ChangeFile.close();
+	}
+	
+	QMessageBox::information(this, "","VersionName is:"+versionName);
+	//*******************************************************************
+
+	
 	QString path = appDir.dirName() + "/build.bat";
 	//QMessageBox::information(this,"build.bat filePath",path);
-	bool b = process.startDetached(appDir.absolutePath()+"/build.bat");
+	//bool b = process.startDetached(appDir.absolutePath()+"/build.bat");
+	bool b = process.startDetached(appDir.absolutePath() + "/build.bat"+versionName);
 	if (!b)
 	{
-		QMessageBox::information(this, "", "open build.bat fail");
+		QMessageBox::information(this, "", "open build.bat fail! path="+ appDir.absolutePath() + "/build.bat");
 	}
 
 }
